@@ -54,7 +54,7 @@ void Network::LinkNeurons() {
 //Prints each neuron in each layer and the weights of each
 void Network::PrintNetwork() {
 	for(int i = 0; i < _network.size(); i++) {
-		cout << "Layer " << i << "\n";
+		cout << "Layer " << i << "\n\t";
 		for(int j = 0; j < _network[i].size(); j++) {
 			_network[i][j].print();
 		}

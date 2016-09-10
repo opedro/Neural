@@ -1,5 +1,6 @@
 #include <iostream>
 #include "network.h"
+#include <time.h>
 
 using std::cout;
 
@@ -37,25 +38,25 @@ int main()
 
 	n.ResetNetwork(); //Randomize Weights
 	n.PrintNetwork();
-	vector<float> o = n.Query(test);
+	
 	
 
 	cout << "Expected: " << expect[0] << " " << expectb[0] << " " << expectc[0] << "\n";
-
+	
+	
+	vector<float> o = n.Query(test);
 	float resA = o[0];
 	cout << "Initial result: " << o[0] << "\n";
 	o = n.Query(testb);
 	cout << "Initial result: " << o[0] << "\n";
-
+	o = n.Query(testc);
+	cout << "Initial result: " << o[0] << "\n";
 
 	int qwe = 100000;
-	//while(qwe--)
-	//{
-	//	n.Train(test, expect);
-	//	n.Train(testb, expectb);
-	//}
+	
 	vector<float> rexp(1);
 	vector<float> rinp(2);
+	cout << "Treinando... \n";
 	while(qwe--)
 	{
 		rinp[0] = (rand() % 200) / 100.0;
@@ -63,7 +64,6 @@ int main()
 		rexp[0] = rinp[0] * rinp[1];
 		n.Train(rinp, rexp);
 	}
-
 	o = n.Query(test);
 	cout << "Trained Result: " << o[0] << "\n";
 	o = n.Query(testb);
@@ -71,5 +71,7 @@ int main()
 
 	o = n.Query(testc);
 	cout << "Trained Result: " << o[0] << "\n";
+	system("pause");
 	return 0;
 }
+
