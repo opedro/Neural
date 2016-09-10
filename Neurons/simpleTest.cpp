@@ -1,5 +1,6 @@
 #include <iostream>
 #include "network.h"
+#include <time.h>
 
 using std::cout;
 
