@@ -75,7 +75,19 @@ vector<float> Network::Query(vector<float> inputs) {
 	for(int i = 0; i < _network.size(); i++) {
 		vector<float> lInp(_network[i].size());
 		for(int j = 0; j < _network[i].size(); j++) {
+		//	cout << _network.size();
 			lInp[j] = _network[i][j].snap(inputs);
+		}
+		inputs = lInp;
+	}
+	return inputs;
+}
+
+vector<float> Network::QueryD(vector<float> inputs) {
+	for(int i = 0; i < _network.size(); i++) {
+		vector<float> lInp(_network[i].size());
+		for(int j = 0; j < _network[i].size(); j++) {
+			lInp[j] = _network[i][j].snapD(inputs);
 		}
 		inputs = lInp;
 	}
@@ -86,6 +98,37 @@ vector<float> Network::Query(vector<float> inputs) {
 void Network::Train(const vector<float> &inputs,const vector<float> &expected) {
 	//Feed forward for results
 	vector<float> results = Query(inputs);
+
+	//Calculate output error.
+	//O * (1 - O) * (A - O) = error
+	for(int i = 0; i < results.size(); i++) {
+		_network[_network.size() - 1][i].error = results[i] * (1 - results[i]) * (expected[i] - results[i]);
+		//Update the output weights
+		_network[_network.size() - 1][i].adjustForError();
+	}	
+	
+	//Back propogate the error
+	//decrement i to move back to the second to last layer
+	for(int i = _network.size() - 2; i >= 0; i--) {
+		for(int hid = 0; hid < _network[i].size(); hid++) {
+			float backPropVal = 0;
+			//Summation of: (W_i * Err_i)
+			for(int bpvI = 0; bpvI < _network[i+1].size(); bpvI++) {
+				backPropVal += (_network[i+1][bpvI].weights[hid] * _network[i+1][bpvI].error);
+			}
+
+			//Error = O * (1 - O) * E(W_i * Err_i)
+			_network[i][hid].error = _network[i][hid].result * (1 - _network[i][hid].result) * backPropVal;
+
+			//Update weights for hidden layer
+			_network[i][hid].adjustForError();
+		}
+	}
+}
+
+void Network::TrainD(const vector<float> &inputs,const vector<float> &expected) {
+	//Feed forward for results
+	vector<float> results = QueryD(inputs);
 
 	//Calculate output error.
 	//O * (1 - O) * (A - O) = error

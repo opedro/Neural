@@ -19,7 +19,9 @@ class Network
 		void ResetNetwork();
 
 		vector<float> Query(vector<float> inputs);
+		vector<float> QueryD(vector<float> inputs);
 		void Train(const vector<float> &inputs,const vector<float> &expected);
+		void TrainD(const vector<float> &inputs,const vector<float> &expected);
 		vector<vector<float> > TrainC(const vector<float> &inputs,const vector<float> &expected) const;
 		void PrintNetwork();
 	private:

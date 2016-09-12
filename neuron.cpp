@@ -9,7 +9,7 @@ Neuron::Neuron(int numInputs, float learn) {
 	learningRate = learn;
 }
 
-//Evaluate the neuron with given inputs
+//Evaluate the neuron with given inputs with sigmoid function
 float Neuron::snap(vector<float> inputs) {
 	lastInp = inputs;
 	result = 0;
@@ -20,7 +20,17 @@ float Neuron::snap(vector<float> inputs) {
 	return result;
 }
 
-//Evaluate the neuron with given inputs
+//Evaluate the neuron with given inputs by a degree function
+float Neuron::snapD(vector<float> inputs) {
+	lastInp = inputs;
+	result = 0;
+	for(int i = 0; i < inputs.size(); i++) {
+		result += inputs[i] * weights[i];
+	}
+	result = degree(result + zWeight);
+	return result;
+}
+//Evaluate the neuron with given inputs 
 float Neuron::snapC(vector<float> inputs) const {
 	float Lresult = 0;
 	for(int i = 0; i < inputs.size(); i++) {
@@ -54,6 +64,9 @@ void Neuron::resetWeights(int range=1) {
 //Sigmoid Activation Function
 float Neuron::sigmoid(float val) const {
 	return 1 / (1 + pow(2.71828, (val * -1)));
+}
+bool Neuron::degree(float val) const {
+	return (1/val)+1>0;
 }
 
 void Neuron::adjustForError() {
